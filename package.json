@@ -1,19 +1,21 @@
 {
   "name": "electron-react-boilerplate",
-  "productName": "ElectronReact",
+  "version": "0.8.0",
+  "productName": "TemplateManager",
   "description": "Electron application boilerplate based on React, React Router, Webpack, React Fast Refresh for rapid application development",
   "scripts": {
-    "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
+    "start": "node -r @babel/register ./.erb/scripts/CheckPortInUse.js && yarn start:renderer",
+    "build": "yarn clean && yarn build-all && rimraf release && electron-builder build --publish never",
+    "build-all": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
     "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.main.prod.babel.js",
     "build:renderer": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.renderer.prod.babel.js",
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir src",
-    "lint": "cross-env NODE_ENV=development eslint . --cache --ext .js,.jsx,.ts,.tsx",
-    "package": "rm -rf src/dist && yarn build && electron-builder build --publish never",
+    "lint": "cross-env NODE_ENV=development eslint . --cache --ext .js,git s.jsx,.ts,.tsx",
     "postinstall": "node -r @babel/register .erb/scripts/CheckNativeDep.js && electron-builder install-app-deps && yarn cross-env NODE_ENV=development webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.babel.js && opencollective-postinstall && yarn-deduplicate yarn.lock",
-    "start": "node -r @babel/register ./.erb/scripts/CheckPortInUse.js && yarn start:renderer",
     "start:main": "cross-env NODE_ENV=development electron -r ./.erb/scripts/BabelRegister ./src/main.dev.ts",
     "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/configs/webpack.config.renderer.dev.babel.js",
-    "test": "jest"
+    "test": "jest",
+    "clean": "rimraf src/dist && rimraf src/main.prod.js && rimraf release"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -30,7 +32,7 @@
     ]
   },
   "build": {
-    "productName": "ElectronReact",
+    "productName": "TemplateManager",
     "appId": "org.erb.ElectronReact",
     "files": [
       "dist/",
@@ -180,9 +182,11 @@
     "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/history": "4.7.6",
     "@types/jest": "^26.0.15",
+    "@types/mustache": "^4.1.1",
     "@types/node": "14.14.10",
     "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.9",
+    "@types/react-highlight": "^0.12.2",
     "@types/react-router-dom": "^5.1.6",
     "@types/react-test-renderer": "^16.9.3",
     "@types/webpack-env": "^1.15.2",
@@ -234,7 +238,7 @@
     "prettier": "^2.0.5",
     "react-refresh": "^0.9.0",
     "react-test-renderer": "^17.0.1",
-    "rimraf": "^3.0.0",
+    "rimraf": "^3.0.2",
     "sass-loader": "^10.1.0",
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^5.0.3",
@@ -248,13 +252,18 @@
     "yarn-deduplicate": "^3.1.0"
   },
   "dependencies": {
+    "@node-minify/core": "^6.2.0",
+    "@node-minify/html-minifier": "^6.2.0",
     "electron-debug": "^3.1.0",
     "electron-log": "^4.2.4",
     "electron-updater": "^4.3.4",
     "history": "^5.0.0",
+    "mjml": "^4.9.3",
+    "mustache": "^4.2.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-router-dom": "^5.2.0",
+    "react-highlight": "^0.14.0",
+    "react-json-view": "^1.21.3",
     "regenerator-runtime": "^0.13.5",
     "source-map-support": "^0.5.19"
   },
